@@ -39,7 +39,7 @@
 </head>
     
 <body onload="document.forms.main_form.isbn.focus()">
-  <version><verysmalli>ORTOPO v0.934 20160927fd</verysmalli></version>
+  <version><verysmalli>ORTOPO v0.936 20161104fd</verysmalli></version>
 
 <?php
 
