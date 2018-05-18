@@ -39,7 +39,7 @@
 </head>
     
 <body onload="document.forms.main_form.isbn.focus()">
-  <version><verysmalli>ORTOPO v0.936 20161104fd</verysmalli></version>
+  <version><verysmalli>ORTOPO v0.94 20180516fd</verysmalli></version>
 
 <?php
 
@@ -49,6 +49,7 @@
 // fonctions externes
    include_once("proquest_function.php");
    include_once("decitre_function.php");
+   include_once("payot_function.php");
    include_once("template_function.php");
    $finalArray = template_function();
 
@@ -124,6 +125,7 @@ if ($uploadOk == 0) {
       <verysmalli>
          <input type="radio" name="supplier" value="Proquest" checked>Proquest</input>
          <input type="radio" name="supplier" value="Decitre" >Decitre</input>
+	 <input type="radio" name="supplier" value="Payot" >Payot</input>
       </verysmalli>
     </TD>
   </TR>
@@ -190,12 +192,10 @@ foreach ($csvarray as $key => $item) {
    // incrementation de la position d'insertion de la prochaine ligne dans le template
    $t = $t+1;
 }
-
 // fin boucle proquest
-
-// debut boucle decitre
-
 }
+
+// boucle DECITRE
 else if ($selected_supplier == "Decitre") {
     if(($file = fopen("uploads/$uploadname","r")) !== FALSE) {
        while (($data = fgetcsv($file, 1000, ";")) !== FALSE) {
@@ -232,13 +232,48 @@ foreach ($csvarray as $key => $item) {
    // incrementation de la position d'insertion de la prochaine ligne dans le template
    $t = $t+1;
 }
-
 // fin boucle decitre
-
-
-
 }
 
+// Boucle PAYOT
+else if ($selected_supplier == "Payot") {
+    if(($file = fopen("uploads/$uploadname","r")) !== FALSE) {
+       while (($data = fgetcsv($file, 1000, ";")) !== FALSE) {
+           $csvarray[] = $data;
+       }
+       fclose($file);
+   }
+   $finalArray[3][10] = "Payot";
+   $finalArray[2][10] = "8056";
+   $finalArray[0][10] = "CHF";
+   $finalArray[1][10] = "1";
+
+// parametres du PO et application au row en cours
+$vat = "0";
+$rate = $finalArray[1][10];
+$t = 9; //position de la premiere ligne de data dans le template
+
+foreach ($csvarray as $key => $item) {
+   if ($key < 1) continue;
+   $row_results = payot_function($csvarray, $key);
+   $title = $row_results[0];
+   $price = $row_results[1];
+   $qty = $row_results[2];
+   $netAmount = $qty*$price;
+   $amountInCurrency = $netAmount+($netAmount*$vat)/100;
+   $estimatedCHFAmount = $netAmount*$rate;
+   $receipt = "Yes";
+   
+   if (substr($title, 0, 3) ==" - ") continue;
+   $row = array("", $title, $account, $costCenter, "", $qty, $price, $vat, $netAmount, $amountInCurrency, $estimatedCHFAmount, $receipt);
+
+   // insertion de row tiré de proquest dans template
+   array_push($finalArray, $row);
+   // incrementation de la position d'insertion de la prochaine ligne dans le template
+   $t = $t+1;
+}
+// fin boucle Payot
+}
 
 // Affichage des resultats;
 echo "<BR>";
