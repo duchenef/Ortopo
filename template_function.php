@@ -37,7 +37,7 @@ $template = array(
     array("Internal Comment", $internalComment, "", "Location", $location, "", "When", $when, "", "Supplier City", $supplierCity, "", ""),
     array("Comment on the PO", $commentOnThePO, "", "", "", "", "Partial delivery accepted", $partialDeliveryAccepted, "", "Not materialised", $notMaterialised, "VAT included", $VATIncluded),
     array("", "", "", "", "", "", "", "", "", "", "", "", ""),
-    array("", "", $account, $costCenter, "", "", "Total", "", "=SUM(G10:G100)", "=SUM(I10:I100)", "=SUM(J10:J100)", "", ""),
+    array("", "", $account, $costCenter, "", "", "Total", "", "=SUM(G10:G1000)", "=SUM(I10:I1000)", "=SUM(J10:J1000)", "", ""),
     array("Supplier Reference", "Item Description / Item ID", "Account", "Cost Center", "Project ID", "Qty", "Unit price", "VAT %", "Net Amount", "Amount in currency", "Estimated CHF Amount", "Receipt?"),
 );
 
