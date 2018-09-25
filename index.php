@@ -39,7 +39,7 @@
 </head>
     
 <body>
-  <version><verysmalli>ORTOPO v0.95 20180924fd</verysmalli></version>
+  <version><verysmalli>ORTOPO v0.96 20180925fd</verysmalli></version>
 
 
 <?php
