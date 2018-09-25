@@ -38,8 +38,9 @@
   </style>
 </head>
     
-<body onload="document.forms.main_form.isbn.focus()">
-  <version><verysmalli>ORTOPO v0.94 20180516fd</verysmalli></version>
+<body>
+  <version><verysmalli>ORTOPO v0.95 20180924fd</verysmalli></version>
+
 
 <?php
 
@@ -47,7 +48,7 @@
    include_once("xlsx_function.php");
 
 // fonctions externes
-   include_once("proquest_function.php");
+   include_once("BFS_function.php");
    include_once("decitre_function.php");
    include_once("payot_function.php");
    include_once("template_function.php");
@@ -123,19 +124,28 @@ if ($uploadOk == 0) {
   <TR>
     <TD colspan='4'>
       <verysmalli>
-         <input type="radio" name="supplier" value="Proquest" checked>Proquest</input>
+         <input type="radio" name="supplier" value="BFS" checked>BFS</input>
          <input type="radio" name="supplier" value="Decitre" >Decitre</input>
 	 <input type="radio" name="supplier" value="Payot" >Payot</input>
       </verysmalli>
     </TD>
   </TR>
       </form>
+  <TR>
+    <TD colspan='4'>
+      <verysmalli>BFS: download basket, delete top rows (keep header) and bottom rows (total etc.), save as CSV. Make sure there are no empty lines at the end of the file.</verysmalli>
 </table>
 
 </body>
 </html>
 
 <?php
+
+function console_log( $data ){
+  echo '<script>';
+  echo 'console.log('. json_encode( $data ) .')';
+  echo '</script>';
+}
 
 $row = 1;
 $csvarray = [];
@@ -155,19 +165,21 @@ $supplier_status="no supplier selected";
 $account = $finalArray[7][2];
 $costCenter = $finalArray[7][3];
 
-// debut boucle proquest
+// debut boucle BFS
 
-if ($selected_supplier == "Proquest") {
+if ($selected_supplier == "BFS") {
    if(($file = fopen("uploads/$uploadname","r")) !== FALSE) {
        while (($data = fgetcsv($file, 1000, ",")) !== FALSE) {
            $csvarray[] = $data;
        }
        fclose($file);
    }
-   $finalArray[3][10] = "Coutts information services";
-   $finalArray[2][10] = "6077";
+   $finalArray[3][10] = "BROWNS BOOKS FOR STUDENTS";
+   $finalArray[2][10] = "9028";
    $finalArray[0][10] = "GBP";
-   $finalArray[1][10] = "1.30";
+   $finalArray[1][10] = "1.3";
+
+console_log( $csvarray[0] );
 
 // parametres du PO et application au row en cours
 $vat = "0";
@@ -176,7 +188,8 @@ $t = 9; //position de la premiere ligne de data dans le template
 
 foreach ($csvarray as $key => $item) {
    if ($key < 1) continue;
-   $row_results = proquest_function($csvarray, $key);
+   $row_results = BFS_function($csvarray, $key);
+   console_log( $row_results );
    $title = $row_results[0];
    $price = $row_results[1];
    $qty = $row_results[2];
@@ -184,15 +197,14 @@ foreach ($csvarray as $key => $item) {
    $amountInCurrency = $netAmount+($netAmount*$vat)/100;
    $estimatedCHFAmount = $netAmount*$rate;
    $receipt = "Yes";
-   
    $row = array("", $title, $account, $costCenter, "", $qty, $price, $vat, $netAmount, $amountInCurrency, $estimatedCHFAmount, $receipt);
 
-   // insertion de row tiré de proquest dans template
+   // insertion de row tiré de BFS dans template
    array_push($finalArray, $row);
    // incrementation de la position d'insertion de la prochaine ligne dans le template
    $t = $t+1;
 }
-// fin boucle proquest
+// fin boucle BFS
 }
 
 // boucle DECITRE
@@ -227,7 +239,7 @@ foreach ($csvarray as $key => $item) {
    if (substr($title, 0, 3) ==" - ") continue;
    $row = array("", $title, $account, $costCenter, "", $qty, $price, $vat, $netAmount, $amountInCurrency, $estimatedCHFAmount, $receipt);
 
-   // insertion de row tiré de proquest dans template
+   // insertion de row tiré de BFS dans template
    array_push($finalArray, $row);
    // incrementation de la position d'insertion de la prochaine ligne dans le template
    $t = $t+1;
@@ -267,7 +279,7 @@ foreach ($csvarray as $key => $item) {
    if (substr($title, 0, 3) ==" - ") continue;
    $row = array("", $title, $account, $costCenter, "", $qty, $price, $vat, $netAmount, $amountInCurrency, $estimatedCHFAmount, $receipt);
 
-   // insertion de row tiré de proquest dans template
+   // insertion de row tiré de BFD dans template
    array_push($finalArray, $row);
    // incrementation de la position d'insertion de la prochaine ligne dans le template
    $t = $t+1;

@@ -10,15 +10,15 @@ $table = array(
         'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c', 'è'=>'e', 'é'=>'e',
         'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o',
         'ô'=>'o', 'õ'=>'o', 'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'ý'=>'y', 'þ'=>'b',
-        'ÿ'=>'y', 'R'=>'R', 'r'=>'r', 'ü'=>'u', '–'=>' '
+        'ÿ'=>'y', 'R'=>'R', 'r'=>'r', 'ü'=>'u', '°'=>'o', '–'=>' '
     );
 
 $comma = array(','=>'.');
 
   
-$title = $csvarray[$row][3]." - ".$csvarray[$row][4]." - ".$csvarray[$row][5];
+$title = $csvarray[$row][3]." - ".$csvarray[$row][4]." - ".$csvarray[$row][6];
 $title = strtr($title, $table);
-$price = $csvarray[$row][8];
+$price = $csvarray[$row][12];
 $price = strtr($price, $comma);
 $qty = $csvarray[$row][2];
 

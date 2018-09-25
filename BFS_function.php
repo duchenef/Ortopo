@@ -1,6 +1,6 @@
 <?php
 
-function proquest_function($csvarray, $row) {
+function BFS_function($csvarray, $row) {
 
 $table = array(
         'Š'=>'S', 'š'=>'s', 'Ð'=>'Dj', 'Ž'=>'Z', 'ž'=>'z', 'C'=>'C', 'c'=>'c', 'C'=>'C', 'c'=>'c','Ü'=>'U',
@@ -10,14 +10,15 @@ $table = array(
         'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c', 'è'=>'e', 'é'=>'e',
         'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o',
         'ô'=>'o', 'õ'=>'o', 'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'ý'=>'y', 'þ'=>'b',
-        'ÿ'=>'y', 'R'=>'R', 'r'=>'r', 'ü'=>'u', '–'=>' '
+        'ÿ'=>'y', 'R'=>'R', 'r'=>'r', 'ü'=>'u', '–'=>' ', '£'=>''
     );
 
    
-$title = $csvarray[$row][0]." - ".$csvarray[$row][1]." - ".$csvarray[$row][2];
+$title = $csvarray[$row][2]." - ".$csvarray[$row][1];
 $title = strtr($title, $table);
-$price = $csvarray[$row][3];
-$qty = $csvarray[$row][4];
+$price = $csvarray[$row][8];
+$price = strtr($price, $table);
+$qty = $csvarray[$row][5];
 
 return array($title, $price, $qty);
 
